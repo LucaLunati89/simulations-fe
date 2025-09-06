@@ -1,0 +1,23 @@
+/*Footer*/
+.footer {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding-bottom: 10px;
+  font-size: 0.9rem;
+  text-align: center;
+  position: fixed;
+  z-index: 500;
+  bottom: 0;
+  width: 100%;
+}
+
+.link {
+  color: var(--white);
+  margin-left: 8px;
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.span {
+  padding-left: 5px;
+}

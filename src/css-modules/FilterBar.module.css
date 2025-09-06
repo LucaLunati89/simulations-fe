@@ -1,0 +1,15 @@
+.filterbar {
+  display: flex;
+  flex-direction: column; /* label sopra */
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding: 10px;
+  gap: 8px; /* spazio tra label e riga sotto */
+  border: 1px solid var(--color-grey-light);
+}
+
+.inputsrow {
+  display: flex; /* input e bottone sulla stessa riga */
+  gap: 10px; /* spazio tra input e bottone */
+  width: 100%;
+}

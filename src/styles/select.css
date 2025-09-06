@@ -1,0 +1,28 @@
+.select {
+  width: var(--width-base);
+  padding: var(--padding);
+  border-radius: var(--border-radius);
+  border: var(--border);
+  font-size: var(--font-size-base);
+  color: var(--text);
+  background: var(--color-white);
+  transition: var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Focus */
+.select:focus {
+  outline: none;
+  border-color: var(--color-grey-medium);
+  box-shadow: var(--shadow-1);
+}
+
+.select option {
+  font-size: var(--font-size-base);
+  color: var(--text);
+  background-color: var(--color-white);
+}

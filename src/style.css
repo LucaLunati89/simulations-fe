@@ -1,0 +1,194 @@
+/* Reset leggero */
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#app {
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+body {
+  background: var(--bg);
+  font-family: "Wix Madefor Display", sans-serif;
+  color: var(--color-black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 400;
+  color: #111827; /* colore di base JetHR-like */
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(
+    to bottom,
+    var(--color-white) 0%,
+    var(--color-fill-light) 100%
+  );
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Wix Madefor Display", sans-serif;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-black);
+}
+
+/* breakpoint large: left main + right summary */
+@media (min-width: 1024px) {
+  .content {
+    grid-template-columns: 1fr 360px;
+    align-items: start;
+  }
+}
+
+.content > :first-child .card {
+  min-width: 600px;
+}
+
+/* Buttons: primary / neutral / danger */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--primary-600);
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #e6e9f0;
+  color: var(--text);
+}
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn {
+  font-family: "Wix Madefor Display", sans-serif;
+  font-weight: 500;
+  background: var(--color-yellow-primary);
+  color: var(--color-black);
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn:hover {
+  background: var(--color-yellow-light);
+}
+/* Tables: subtle, readable */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.table thead th {
+  text-align: left;
+  font-weight: 600;
+  padding: 12px 8px;
+  color: #374151;
+  border-bottom: 1px solid #f1f5f9;
+}
+.table tbody td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #f6f9fc;
+  color: #111827;
+}
+.table tfoot td {
+  padding: 12px 8px;
+  font-weight: 700;
+}
+
+/* small helpers */
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.col {
+  flex: 1;
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* popup */
+.popup-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 12, 20, 0.35);
+  z-index: 9999;
+}
+.popup {
+  background: var(--card-bg);
+  padding: 18px;
+  border-radius: 12px;
+  min-width: 280px;
+  box-shadow: var(--shadow-1);
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.popup p {
+  margin: 0 0 12px 0;
+  color: var(--text);
+}
+
+/* responsive tweaks */
+@media (max-width: 1023px) {
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  .header {
+    padding: 12px 16px;
+  }
+  .btn {
+    padding: 7px 10px;
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}

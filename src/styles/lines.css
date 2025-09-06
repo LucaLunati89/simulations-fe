@@ -1,0 +1,5 @@
+.lines {
+  border: none;
+  height: 1px;
+  background-color: var(--color-grey-light);
+}

@@ -1,0 +1,33 @@
+:root {
+  --bg: #f3f6fb;
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+  --text: #0f172a;
+  --danger: #ef4444;
+  --card-radius: 14px;
+  --shadow-1: 0 6px 18px rgba(15, 23, 42, 0.06);
+  --container-max: 1200px;
+  --gap: 20px;
+
+  /* --- JetHR Primary Palette --- */
+  --color-black: #11150a;
+  --color-grey-dark: #3f4340;
+  --color-grey-medium: #59615f;
+  --color-grey-light: #e7e8e7;
+
+  /* --- Yellow Palette --- */
+  --color-yellow-primary: #dfeb57;
+  --color-yellow-light: #f6f9cf;
+  --color-yellow-lighter: #fcfdee;
+
+  /* --- Backgrounds --- */
+  --color-fill-light: #f1f4f1;
+  --color-white: #ffffff;
+
+  --width-base: 100%;
+  --font-size-base: 14px;
+  --border-radius: 10px;
+  --padding: 10px 12px;
+  --border: 1px solid var(--color-grey-light);
+  --transition: box-shadow 0.15s, border-color 0.15s;
+}
