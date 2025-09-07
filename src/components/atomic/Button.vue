@@ -11,12 +11,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import type { PropType } from "vue";
 
 export default defineComponent({
   name: "Button",
   props: {
     label: { type: String, default: "Click Me" },
-    type: { type: String as "button" | "submit" | "reset", default: "button" },
+    type: {
+      type: String as PropType<"button" | "submit" | "reset">,
+      default: "button",
+    },
     disabled: { type: Boolean, default: false },
   },
 });

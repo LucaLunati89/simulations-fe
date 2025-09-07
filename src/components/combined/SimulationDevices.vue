@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, PropType } from "vue";
+import { defineComponent, computed, type PropType } from "vue";
 import Table from "../atomic/Table.vue";
 import Button from "../atomic/Button.vue";
 import type { SimulationDevice } from "../../api/types";

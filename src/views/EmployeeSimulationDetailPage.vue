@@ -152,7 +152,6 @@ export default defineComponent({
     };
     // 🔍 Counter globale per tracciare gli handler
     let handleDeviceAddedCounter = 0;
-    let handleDeviceRemovedCounter = 0;
 
     // Aggiungi device (ora riceve evento invece di callback)
     const handleDeviceAdded = async (device: SimulationDevice) => {

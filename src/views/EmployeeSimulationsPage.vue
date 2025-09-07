@@ -13,8 +13,8 @@
           class="custom-pagination"
           :currentPage="currentPage"
           :totalPages="totalPages"
-          :next="next"
-          :previous="previous"
+          :next="next || false"
+          :previous="previous || false"
           @change-page="onChangePage"
         />
       </div>

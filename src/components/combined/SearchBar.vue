@@ -30,7 +30,7 @@ export default {
   name: "SearchBar",
   components: { Input, Button, Select },
   emits: ["search"],
-  setup(props, { emit }) {
+  setup({}, { emit }) {
     const sortOption = ref("id");
     const from = ref("");
     const to = ref("");
