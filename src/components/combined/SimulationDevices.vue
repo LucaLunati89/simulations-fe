@@ -1,80 +1,6 @@
-<!-- <template>
-  <div class="simulation-devices card">
-    <Table :data="devices">
-      <template #actions="{ row }">
-        <Button label="Rimuovi" @click.stop="$emit('removeDevice', row.id)" />
-      </template>
-
-      <template #default="{ row, columns }">
-        <td>{{ row.device.model }}</td>
-        <td>{{ row.device.brand }}</td>
-        <td>{{ row.months }}</td>
-        <td>{{ row.device.monthly_cost }} €</td>
-        <td>{{ row.total_cost }} €</td>
-      </template>
-    </Table>
-
-    <div v-if="devices.length > 0" class="total">
-      <strong>Costo totale: {{ totalCost }} €</strong>
-    </div>
-    <div v-else class="empty">Nessun dispositivo aggiunto</div>
-  </div>
-</template>
-
-<script lang="ts">
-import { defineComponent, computed, PropType } from "vue";
-import Table from "../atomic/Table.vue";
-import Button from "../atomic/Button.vue";
-import type { SimulationDevice } from "../../api/types";
-
-export default defineComponent({
-  name: "SimulationDevices",
-  components: { Table, Button },
-  props: {
-    devices: { type: Array as PropType<SimulationDevice[]>, required: true },
-  },
-  emits: ["removeDevice"],
-  setup(props) {
-    // Calcola costo totale
-    const totalCost = computed(() =>
-      props.devices.reduce((acc, d) => {
-        const clean = String(d.total_cost).replace(",", ".");
-        return acc + parseFloat(clean);
-      }, 0)
-    );
-
-    return { totalCost };
-  },
-});
-</script>
-
-<style scoped>
-.simulation-devices {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
-
-.total {
-  margin-top: 1rem;
-  font-size: 16px;
-  text-align: right;
-}
-
-.empty {
-  margin-top: 1rem;
-  text-align: center;
-  color: #888;
-}
-</style> -->
-
 <template>
   <div class="simulation-devices card">
-    <h2>Dispositivi aggiunti alla simulazione</h2>
-
-    <Table :data="devices">
+    <Table :data="mappedDevices">
       <!-- Slot actions per il bottone Rimuovi -->
       <template #actions="{ row }">
         <Button label="Rimuovi" @click.stop="$emit('removeDevice', row.id)" />
@@ -94,6 +20,16 @@ import Table from "../atomic/Table.vue";
 import Button from "../atomic/Button.vue";
 import type { SimulationDevice } from "../../api/types";
 
+// Interfaccia per i dati mappati in italiano
+interface SimulationDeviceIT {
+  id: number;
+  modello: string;
+  marca: string;
+  costo_mensile: string;
+  mesi: number;
+  costo_totale: string;
+}
+
 export default defineComponent({
   name: "SimulationDevices",
   components: { Table, Button },
@@ -102,6 +38,18 @@ export default defineComponent({
   },
   emits: ["removeDevice"],
   setup(props) {
+    // Mappa i dati in italiano
+    const mappedDevices = computed((): SimulationDeviceIT[] => {
+      return props.devices.map((device) => ({
+        id: device.id,
+        modello: device.device.model,
+        marca: device.device.brand,
+        costo_mensile: device.device.monthly_cost,
+        mesi: device.months,
+        costo_totale: device.total_cost,
+      }));
+    });
+
     // Calcola costo totale
     const totalCost = computed(() =>
       props.devices.reduce((acc, d) => {
@@ -110,20 +58,12 @@ export default defineComponent({
       }, 0)
     );
 
-    return { totalCost };
+    return { mappedDevices, totalCost };
   },
 });
 </script>
 
 <style scoped>
-.simulation-devices {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
-
 .total {
   margin-top: 1rem;
   font-size: 16px;

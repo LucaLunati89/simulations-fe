@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <h2 class="card-title">Dettaglio Dipendente #{{ employee.id }}</h2>
+    <h2 class="card-title">Dettaglio Dipendente: {{ employee.id }}</h2>
     <div class="card-body">
       <p>
         <span class="label">Stipendio Lordo:</span> {{ employee.gross_salary }}

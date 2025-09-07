@@ -1,6 +1,10 @@
 <template>
-  <div class="content">
-    <Button class="btn" label="Torna alla lista" @click="$router.push('/')" />
+  <div v-if="!isLoading" class="content">
+    <Button
+      class="btn custom-btn"
+      label="Torna alla lista"
+      @click="$router.push('/employee-simulations')"
+    />
 
     <!-- Employee -->
     <EmployeeCard v-if="employee" :employee="employee" />
@@ -8,7 +12,11 @@
 
     <!-- Simulazione -->
     <div v-if="simulation">
-      <SimulationCard :simulation="simulation" />
+      <SimulationCard
+        :simulation="simulation"
+        :baseCost="employee?.base_cost || 0"
+        :totalDevicesCost="devicesTotalCost"
+      />
 
       <h3>Dispositivi aggiunti alla simulazione:</h3>
       <SimulationDevices
@@ -21,6 +29,7 @@
         <!-- ✅ CAMBIATO: usa @deviceAdded invece di :onDeviceAdded -->
         <DeviceTable
           :simulationId="simulation.id"
+          :addedDeviceIds="simulationDevices.map((d) => d.device.id)"
           @deviceAdded="handleDeviceAdded"
         />
       </div>
@@ -41,10 +50,13 @@
       />
     </div>
   </div>
+  <div v-else class="loader-container">
+    <div class="loader"></div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 import type { EmployeeSimulation, Simulation } from "../api/types";
 import type { SimulationDevice } from "../api/types";
@@ -78,10 +90,14 @@ export default defineComponent({
     const newSimulationName = ref("");
     const isCreating = ref(false);
     const id = ref<number>(+route.params.id);
+    const isLoading = ref(false);
 
     // Carica dati iniziali
     onMounted(async () => {
+      isLoading.value = true;
       try {
+        await new Promise((resolve) => setTimeout(resolve, 0.2));
+
         const response = await fetchEmployeeSimulationById(id.value);
         employee.value = response;
 
@@ -96,6 +112,8 @@ export default defineComponent({
         }
       } catch (error) {
         console.error("Errore nel fetch dei dettagli:", error);
+      } finally {
+        isLoading.value = false;
       }
     });
 
@@ -183,6 +201,17 @@ export default defineComponent({
       }
     };
 
+    // Nel setup di EmployeeSimulationDetailPage
+    const devicesTotalCost = computed(() => {
+      return simulationDevices.value.reduce((acc, device) => {
+        const cost =
+          typeof device.total_cost === "string"
+            ? parseFloat(device.total_cost.replace(",", "."))
+            : device.total_cost;
+        return acc + cost;
+      }, 0);
+    });
+
     return {
       employee,
       simulation,
@@ -193,6 +222,8 @@ export default defineComponent({
       createSimulation: createSimulationHandler,
       handleDeviceAdded,
       handleDeviceRemoved,
+      isLoading,
+      devicesTotalCost,
     };
   },
 });
@@ -229,5 +260,39 @@ export default defineComponent({
 
 .devices-section {
   margin-top: 2rem;
+}
+
+.custom-btn {
+  margin-bottom: 20px;
+}
+/* AGGIUNTO: Container per centrare il loader */
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* AGGIUNTO: Stile del loader */
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--color-black); /* Grigio più scuro per il base */
+  border-top: 4px solid var(--color-yellow-primary); /* Nero per la parte che ruota */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+/* AGGIUNTO: Animazione di rotazione */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

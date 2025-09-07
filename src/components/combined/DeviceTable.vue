@@ -1,10 +1,14 @@
 <template>
   <div class="device-component card">
-    <Table :data="paginatedData">
+    <Table :data="mappedPaginatedData">
       <template #actions="{ row }">
         <Button
-          label="Aggiungi"
-          :disabled="addedDevices.includes(row.id)"
+          :label="addedDevices.includes(row.id) ? 'Aggiunto' : 'Aggiungi'"
+          :disabled="addedDevices.includes(row.id) || isAddingDevice"
+          :class="{
+            'button-disabled': addedDevices.includes(row.id),
+            'button-loading': isAddingDevice,
+          }"
           @click.stop="addDevice(row.id)"
         />
       </template>
@@ -28,6 +32,14 @@ import Pagination from "../atomic/Pagination.vue";
 import Button from "../atomic/Button.vue";
 import { getAllDevices } from "../../api/devices";
 import { addDeviceToSimulation } from "../../api/simulationDevice";
+
+// Interfaccia per i dati mappati in italiano
+interface DeviceIT {
+  id: number;
+  modello: string;
+  costo_mensile: string;
+  marca: string;
+}
 
 // 🔍 Counter globale per tracciare le chiamate
 let addDeviceCounter = 0;
@@ -58,6 +70,16 @@ export default {
     const paginatedData = computed(() => {
       const start = (currentPage.value - 1) * pageSize;
       return tableData.value.slice(start, start + pageSize);
+    });
+
+    // Computed per mappare i dati in italiano
+    const mappedPaginatedData = computed((): DeviceIT[] => {
+      return paginatedData.value.map((device) => ({
+        id: device.id,
+        modello: device.model,
+        costo_mensile: device.monthly_cost,
+        marca: device.brand,
+      }));
     });
 
     const loadData = async () => {
@@ -143,13 +165,40 @@ export default {
     return {
       tableData,
       paginatedData,
+      mappedPaginatedData,
       currentPage,
       totalPages,
       onChangePage: (page: number) => (currentPage.value = page),
       addDevice,
       addedDevices,
-      isAddingDevice, // Aggiungi questo per debug
+      isAddingDevice,
     };
   },
 };
 </script>
+
+<style scoped>
+.button-disabled {
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+  cursor: not-allowed !important;
+  border-color: #ccc !important;
+}
+
+.button-disabled:hover {
+  background-color: #e0e0e0 !important;
+  color: #999 !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.button-loading {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+.button-loading:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+</style>

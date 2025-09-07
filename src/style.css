@@ -9,6 +9,12 @@ body,
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: linear-gradient(
+    to bottom,
+    var(--color-white) 0%,
+    var(--color-fill-light) 100%
+  );
+  background-attachment: fixed;
 }
 body {
   background: var(--bg);
@@ -22,11 +28,6 @@ body {
   color: #111827; /* colore di base JetHR-like */
   margin: 0;
   padding: 0;
-  background: linear-gradient(
-    to bottom,
-    var(--color-white) 0%,
-    var(--color-fill-light) 100%
-  );
 }
 
 h1,

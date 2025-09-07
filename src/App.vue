@@ -2,10 +2,6 @@
   <div id="app">
     <Header />
     <router-view />
-    <!--     <main class="content">
-      <Simulation />
-    </main> -->
-
     <Footer />
   </div>
 </template>
@@ -13,7 +9,6 @@
 <script setup lang="ts">
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
-import Simulation from "./components/Simulation.vue";
 
 import { onMounted } from "vue";
 onMounted(() => {
