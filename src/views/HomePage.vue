@@ -15,7 +15,7 @@
             </p>
 
             <ul class="steps-list">
-              <li>1) Seleziona una la simulazione di un dipendente</li>
+              <li>1) Seleziona una simulazione di un dipendente</li>
               <li>2) Aggiungi i costi dei dispositivi alla simulazione</li>
               <li>3) Visualizza immediatamente i costi totali integrati</li>
             </ul>
@@ -82,7 +82,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Button from "../components/atomic/Button.vue";
-
+import { getAllDevices } from "../api/devices";
 export default defineComponent({
   name: "HomePage",
   components: {
@@ -92,6 +92,12 @@ export default defineComponent({
     return {
       showWarningBanner: false,
     };
+  },
+  async mounted() {
+    // Wake-up call per il server Render
+    getAllDevices().catch(() => {
+      // Ignora errori, serve solo per riattivare il server
+    });
   },
   methods: {
     proceedToSimulations() {
