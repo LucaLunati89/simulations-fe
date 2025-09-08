@@ -37,7 +37,7 @@ import { addDeviceToSimulation } from "../../api/simulationDevice";
 interface DeviceIT {
   id: number;
   modello: string;
-  costo_mensile: string;
+  costo_mensile: number;
   marca: string;
 }
 

@@ -4,6 +4,7 @@ export interface Device {
   id: ID;
   model: string;
   monthly_cost: number;
+  brand: string;
 }
 
 export const SimulationStatus = {
@@ -50,7 +51,7 @@ export interface SimulationDevice {
   simulation: number;
   device: Device;
   months: number;
-  total_cost: number;
+  total_cost: number | string;
 }
 
 export interface SimulationDevicePatch {

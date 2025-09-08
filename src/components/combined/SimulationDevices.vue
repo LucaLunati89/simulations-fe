@@ -44,9 +44,9 @@ export default defineComponent({
         id: device.id,
         modello: device.device.model,
         marca: device.device.brand,
-        costo_mensile: device.device.monthly_cost,
+        costo_mensile: String(device.device.monthly_cost),
         mesi: device.months,
-        costo_totale: device.total_cost,
+        costo_totale: String(device.total_cost),
       }));
     });
 
