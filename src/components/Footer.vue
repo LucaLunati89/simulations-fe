@@ -14,7 +14,7 @@
         <i class="fab fa-linkedin"></i>
       </a>
       <a
-        href="https://github.com/tuo-username"
+        href="https://github.com/LucaLunati89"
         target="_blank"
         rel="noopener noreferrer"
         :class="styles.link"
