@@ -7,12 +7,15 @@
     />
 
     <!-- Employee -->
-    <EmployeeCard v-if="employee" :employee="employee" />
-    <div v-else class="loading">Caricamento dipendente...</div>
+    <div>
+      <EmployeeCard v-if="employee" :employee="employee" />
+      <div v-else class="loading">Caricamento dipendente...</div>
+    </div>
 
     <!-- Simulazione -->
     <div v-if="simulation">
       <SimulationCard
+        class="simulation-card"
         :simulation="simulation"
         :baseCost="employee?.base_cost || 0"
         :totalDevicesCost="devicesTotalCost"
@@ -22,6 +25,7 @@
       <SimulationDevices
         :devices="simulationDevices"
         @removeDevice="handleDeviceRemoved"
+        @updateDeviceMonths="updateDeviceMonths"
       />
 
       <div class="devices-section">
@@ -70,6 +74,7 @@ import { fetchEmployeeSimulations, createSimulation } from "../api/simulation";
 import {
   fetchSimulationDevices,
   deleteSimulationDevice,
+  updateSimulationDevice,
 } from "../api/simulationDevice";
 
 export default defineComponent({
@@ -92,6 +97,61 @@ export default defineComponent({
     const id = ref<number>(+route.params.id);
     const isLoading = ref(false);
 
+    // 🔧 helper per parsare stringhe numeriche
+    const parseNumber = (value: string | number): number => {
+      if (typeof value === "number") return value;
+      if (!value) return 0;
+
+      let s = value.trim();
+      s = s
+        .replace(/\u00A0/g, "")
+        .replace(/\s+/g, "")
+        .replace(/[€$£¥]/g, "");
+
+      const lastDot = s.lastIndexOf(".");
+      const lastComma = s.lastIndexOf(",");
+
+      if (lastDot !== -1 && lastComma !== -1) {
+        if (lastDot > lastComma) {
+          s = s.replace(/,/g, "");
+        } else {
+          s = s.replace(/\./g, "").replace(/,/g, ".");
+        }
+      } else if (lastComma !== -1) {
+        const decimals = s.length - lastComma - 1;
+        if (decimals === 1 || decimals === 2) {
+          s = s.replace(/,/g, ".");
+        } else {
+          s = s.replace(/,/g, "");
+        }
+      } else if (lastDot !== -1) {
+        const decimals = s.length - lastDot - 1;
+        if (!(decimals === 1 || decimals === 2)) {
+          s = s.replace(/\./g, "");
+        }
+      }
+
+      const n = parseFloat(s);
+      return isNaN(n) ? 0 : n;
+    };
+    function parseAndFormat(value: string): string {
+      // Rimuove la virgola usata come separatore delle migliaia
+      const normalized = value.replace(/,/g, "");
+
+      // Converte in numero
+      const numberValue = parseFloat(normalized);
+
+      if (isNaN(numberValue)) {
+        throw new Error("Valore non valido");
+      }
+
+      // Restituisce il numero formattato in italiano
+      return numberValue.toLocaleString("it-IT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
+
     // Carica dati iniziali
     onMounted(async () => {
       isLoading.value = true;
@@ -100,6 +160,8 @@ export default defineComponent({
 
         const response = await fetchEmployeeSimulationById(id.value);
         employee.value = response;
+        response.gross_salary = parseAndFormat(response.gross_salary);
+        response.base_cost = parseAndFormat(response.base_cost);
 
         const simsResponse = await fetchEmployeeSimulations(id.value);
         simulationsList.value = simsResponse.results;
@@ -203,13 +265,47 @@ export default defineComponent({
     // Nel setup di EmployeeSimulationDetailPage
     const devicesTotalCost = computed(() => {
       return simulationDevices.value.reduce((acc, device) => {
-        const cost =
-          typeof device.total_cost === "string"
-            ? parseFloat(device.total_cost.replace(",", "."))
-            : device.total_cost;
-        return acc + cost;
+        return acc + parseNumber(device.total_cost as any);
       }, 0);
     });
+
+    const updateDeviceMonths = async (
+      simDeviceId: number,
+      newMonths: number
+    ) => {
+      console.log("🎯 updateDeviceMonths ricevuto nel padre:", {
+        simDeviceId,
+        newMonths,
+      });
+
+      if (!employee.value) return;
+
+      // Limita il valore: minimo 1, massimo mesi contratto dipendente
+      const months = Math.min(
+        Math.max(newMonths, 1),
+        employee.value.contract_months
+      );
+
+      console.log("🔄 Mesi dopo validazione:", months);
+
+      try {
+        console.log("🌐 Chiamando API updateSimulationDevice...");
+        await updateSimulationDevice(simDeviceId, months);
+        console.log("✅ API chiamata con successo");
+
+        // Aggiorna localmente la lista dei dispositivi
+        const device = simulationDevices.value.find(
+          (d) => d.id === simDeviceId
+        );
+        if (device) {
+          device.months = months;
+          device.total_cost = device.device.monthly_cost * months;
+          console.log("💾 Device aggiornato localmente:", device);
+        }
+      } catch (err) {
+        console.error("❌ Errore nell'aggiornamento dei mesi:", err);
+      }
+    };
 
     return {
       employee,
@@ -223,6 +319,7 @@ export default defineComponent({
       handleDeviceRemoved,
       isLoading,
       devicesTotalCost,
+      updateDeviceMonths,
     };
   },
 });
@@ -293,5 +390,8 @@ export default defineComponent({
   100% {
     transform: rotate(360deg);
   }
+}
+
+.simulation-card {
 }
 </style>

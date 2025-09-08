@@ -51,7 +51,7 @@ export interface SimulationDevice {
   simulation: number;
   device: Device;
   months: number;
-  total_cost: number | string;
+  total_cost: number;
 }
 
 export interface SimulationDevicePatch {

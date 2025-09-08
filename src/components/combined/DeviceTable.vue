@@ -37,7 +37,7 @@ import { addDeviceToSimulation } from "../../api/simulationDevice";
 interface DeviceIT {
   id: number;
   modello: string;
-  costo_mensile: number;
+  costo_mensile: string;
   marca: string;
 }
 
@@ -72,12 +72,19 @@ export default {
       return tableData.value.slice(start, start + pageSize);
     });
 
+    const formatToItalianString = (value: number) => {
+      return Number(value).toLocaleString("it-IT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    };
+
     // Computed per mappare i dati in italiano
     const mappedPaginatedData = computed((): DeviceIT[] => {
       return paginatedData.value.map((device) => ({
         id: device.id,
         modello: device.model,
-        costo_mensile: device.monthly_cost,
+        costo_mensile: formatToItalianString(device.monthly_cost),
         marca: device.brand,
       }));
     });

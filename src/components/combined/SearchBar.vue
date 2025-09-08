@@ -12,10 +12,10 @@
         { label: 'Id', value: 'id', default: true },
         {
           label: 'Stipendio maggiore',
-          value: 'gross_salary',
+          value: '-gross_salary',
           default: false,
         },
-        { label: 'Stipendio minore', value: '-gross_salary', default: false },
+        { label: 'Stipendio minore', value: 'gross_salary', default: false },
       ]"
     />
   </div>

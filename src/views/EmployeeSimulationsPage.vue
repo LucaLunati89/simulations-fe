@@ -65,12 +65,30 @@ export default defineComponent({
     ): EmployeeSimulationIT[] => {
       return data.map((item) => ({
         id: item.id,
-        stipendio_lordo: item.gross_salary,
+        stipendio_lordo: parseAndFormat(item.gross_salary),
         aliquota_fiscale: item.tax_rate,
         mesi_contratto: item.contract_months,
-        costo_base: item.base_cost,
+        costo_base: parseAndFormat(item.base_cost),
       }));
     };
+
+    function parseAndFormat(value: string): string {
+      // Rimuove la virgola usata come separatore delle migliaia
+      const normalized = value.replace(/,/g, "");
+
+      // Converte in numero
+      const numberValue = parseFloat(normalized);
+
+      if (isNaN(numberValue)) {
+        throw new Error("Valore non valido");
+      }
+
+      // Restituisce il numero formattato in italiano
+      return numberValue.toLocaleString("it-IT", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    }
 
     // Funzione per caricare dati filtrati/paginati
     const loadData = async (page = 1) => {
@@ -91,6 +109,7 @@ export default defineComponent({
         });
 
         tableData.value = mapToItalian(response.results);
+        console.log("employee sim", tableData.value);
         currentPage.value = page;
         next.value = response.next;
         previous.value = response.previous;

@@ -25,17 +25,55 @@
             <Button
               class="primary-btn"
               label="Prova Ora"
-              @click="$router.push('/employee-simulations/')"
+              @click="showWarningBanner = true"
             />
           </div>
         </div>
+        <div class="hero-image">
+          <img src="../assets/mock.png" alt="Illustrazione Hero" />
+        </div>
+      </div>
+    </div>
 
-        <!--         <div class="image-content">
-          <div class="mockup-placeholder">
-            <div class="mockup-icon">📊</div>
-            <span>Simulazione Costi</span>
-          </div>
-        </div> -->
+    <!-- Warning Banner Modal -->
+    <div
+      v-if="showWarningBanner"
+      class="modal-overlay"
+      @click="handleOverlayClick"
+    >
+      <div class="warning-banner" @click.stop>
+        <div class="banner-header">
+          <div class="warning-icon">⚠️</div>
+          <h3>Nota importante</h3>
+          <button
+            class="close-btn"
+            @click="showWarningBanner = false"
+            aria-label="Chiudi"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="banner-content">
+          <p>
+            Il server è ospitato su un piano gratuito di Render: se non viene
+            utilizzato per circa 15 minuti, viene messo in pausa
+            automaticamente.
+          </p>
+          <p>
+            Al successivo accesso può essere necessario attendere
+            <strong>1–2 minuti</strong> per il riavvio dei servizi BE.
+          </p>
+        </div>
+
+        <div class="banner-actions">
+          <button class="secondary-btn" @click="showWarningBanner = false">
+            Annulla
+          </button>
+          <button class="primary-btn" @click="proceedToSimulations">
+            Ho capito, procedi
+          </button>
+        </div>
       </div>
     </div>
   </main>
@@ -50,6 +88,20 @@ export default defineComponent({
   components: {
     Button,
   },
+  data() {
+    return {
+      showWarningBanner: false,
+    };
+  },
+  methods: {
+    proceedToSimulations() {
+      this.showWarningBanner = false;
+      this.$router.push("/employee-simulations/");
+    },
+    handleOverlayClick() {
+      this.showWarningBanner = false;
+    },
+  },
 });
 </script>
 
@@ -58,12 +110,13 @@ export default defineComponent({
   min-height: 80vh;
   display: flex;
   align-items: center;
+  margin: 0 auto;
 }
 
 .wrapper {
   max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 var(--gap);
+  margin: 0 2rem;
+  /*padding: 0 2rem;*/
   width: 100%;
 }
 
@@ -75,7 +128,7 @@ export default defineComponent({
 }
 
 .text-content {
-  flex: 0 0 60%;
+  flex: 0 0 50%;
   max-width: 60%;
 }
 
@@ -113,18 +166,6 @@ export default defineComponent({
   line-height: 1.5;
 }
 
-/* .steps-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.2rem;
-  width: 0.2rem;
-  height: 0.2rem;
-  background: var(--color-black);
-  border-radius: 50%;
-  transform: translateY(-50%);
-} */
-
 .steps-list li:last-child {
   margin-bottom: 0;
 }
@@ -135,7 +176,6 @@ export default defineComponent({
 
 .primary-btn {
   background: var(--color-black);
-
   color: var(--color-white);
   border: none;
   padding: 16px 32px;
@@ -159,35 +199,136 @@ export default defineComponent({
   transform: translateY(0);
 }
 
-.image-content {
-  flex: 0 0 35%;
-  max-width: 35%;
-  text-align: center;
-}
-
-.mockup-placeholder {
-  background: var(--card-bg);
-  border-radius: var(--card-radius);
-  padding: 3rem 2rem;
-  box-shadow: var(--shadow-1);
-  border: var(--border);
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  min-height: 300px;
   justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
 }
 
-.mockup-icon {
-  font-size: 4rem;
-  color: var(--color-yellow-primary);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.mockup-placeholder span {
-  font-size: 1.125rem;
-  color: var(--color-grey-medium);
+.warning-banner {
+  background: white;
+  border-radius: var(--card-radius, 12px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  max-width: 500px;
+  width: 100%;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.banner-header {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1.5rem 0;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.warning-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.banner-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-black, #000);
+  margin: 0;
+  flex-grow: 1;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-grey-medium, #666);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.banner-content {
+  padding: 1rem 1.5rem;
+}
+
+.banner-content p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  color: var(--color-grey-dark, #333);
+}
+
+.banner-content p:last-child {
+  margin-bottom: 0;
+}
+
+.banner-actions {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: var(--color-grey-dark, #333);
+  border: 1px solid var(--color-grey-light, #ddd);
+  padding: 12px 24px;
+  border-radius: var(--border-radius, 8px);
+  font-size: 0.95rem;
   font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition, all 0.2s ease);
+}
+
+.secondary-btn:hover {
+  background: var(--color-grey-light, #f5f5f5);
+}
+
+.banner-actions .primary-btn {
+  margin: 0;
+  padding: 12px 24px;
+  font-size: 0.95rem;
 }
 
 /* Responsive Design */
@@ -198,8 +339,7 @@ export default defineComponent({
     text-align: center;
   }
 
-  .text-content,
-  .image-content {
+  .text-content {
     flex: none;
     max-width: 100%;
   }
@@ -217,9 +357,13 @@ export default defineComponent({
     display: inline-block;
   }
 
-  .mockup-placeholder {
-    padding: 2rem 1rem;
-    min-height: 200px;
+  .banner-actions {
+    flex-direction: column-reverse;
+  }
+
+  .banner-actions .primary-btn,
+  .banner-actions .secondary-btn {
+    width: 100%;
   }
 }
 
@@ -241,5 +385,28 @@ export default defineComponent({
   .hero-content {
     gap: 1.5rem;
   }
+
+  .modal-overlay {
+    padding: 1rem 0.5rem;
+  }
+
+  .banner-header,
+  .banner-content,
+  .banner-actions {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.hero-image {
+  flex: 0 0 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-image img {
+  max-width: 100%;
+  height: auto;
 }
 </style>

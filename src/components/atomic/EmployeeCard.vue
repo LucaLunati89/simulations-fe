@@ -3,14 +3,15 @@
     <h2 class="card-title">Dettaglio Dipendente: {{ employee.id }}</h2>
     <div class="card-body">
       <p>
-        <span class="label">Stipendio Lordo:</span> {{ employee.gross_salary }}
+        <span class="label">Stipendio Lordo:</span>
+        {{ employee.gross_salary }} €
       </p>
       <p><span class="label">Aliquota Tasse:</span> {{ employee.tax_rate }}%</p>
       <p>
         <span class="label">Mesi Contratto:</span>
         {{ employee.contract_months }}
       </p>
-      <p><span class="label">Costo Base:</span> {{ employee.base_cost }}</p>
+      <p><span class="label">Costo Base:</span> {{ employee.base_cost }} €</p>
     </div>
   </div>
 </template>

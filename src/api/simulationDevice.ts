@@ -29,9 +29,12 @@ export async function updateSimulationDevice(
   simDeviceId: number,
   months: number
 ) {
-  const { data } = await api.patch(`/simulation-device/${simDeviceId}/update`, {
-    months,
-  });
+  const { data } = await api.patch(
+    `/devices-simulation/${simDeviceId}/update`,
+    {
+      months,
+    }
+  );
   return data;
 }
 
